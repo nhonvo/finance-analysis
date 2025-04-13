@@ -1,7 +1,8 @@
 import pandas as pd
 import logging
 from typing import List
-from data.transaction import Transaction
+
+from domain.models.transaction import Transaction
 
 logger = logging.getLogger("uvicorn")
 

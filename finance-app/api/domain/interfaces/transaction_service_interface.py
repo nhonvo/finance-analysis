@@ -2,7 +2,8 @@ from typing import Optional, List
 from abc import ABC, abstractmethod
 from datetime import date
 from typing import Any, Dict
-from data.transaction import Transaction
+
+from domain.models.transaction import Transaction
 
 
 class ITransactionService(ABC):

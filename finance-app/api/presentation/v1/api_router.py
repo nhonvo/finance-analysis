@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from api.v1.endpoints import transactions, health
+from presentation.v1.endpoints import transactions, health
 
 
 api_router = APIRouter()

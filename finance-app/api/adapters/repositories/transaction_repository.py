@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import List
 
-from data.transaction import Transaction
-from repository.generic_repository import GenericRepository
+from adapters.repositories.generic_repository import GenericRepository
+from domain.models.transaction import Transaction
 
 
 class TransactionRepository(GenericRepository[Transaction]):

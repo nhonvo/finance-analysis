@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Query, Depends
 from datetime import date
 from typing import List, Dict, Any, Optional
-from interfaces.transaction_service_interface import ITransactionService
-from data.transaction import Transaction
-from dependencies import get_transaction_service
+from domain.interfaces.transaction_service_interface import ITransactionService
+from presentation.dependencies import get_transaction_service
+from domain.models.transaction import Transaction
 
 router = APIRouter()
 

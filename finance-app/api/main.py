@@ -1,21 +1,28 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
+from infrastructure.middleware.global_exception_middleware import (
+    GlobalExceptionMiddleware,
+)
+from infrastructure.middleware.request_response_logging_middleware import (
+    RequestResponseLoggingMiddleware,
+)
 from presentation.v1 import api_router
 import logging
 import uvicorn
+
+
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO
+)
 
 logger = logging.getLogger("uvicorn")
 
 app = FastAPI(title="Finance API")
 
+# Register the middleware
+app.add_middleware(GlobalExceptionMiddleware)
+app.add_middleware(RequestResponseLoggingMiddleware)
+
 app.include_router(api_router.api_router, prefix="/api/v1")
-
-
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-    logger.info(f"Request: {request.method} {request.url}")
-    response = await call_next(request)
-    logger.info(f"Response status: {response.status_code}")
-    return response
 
 
 if __name__ == "__main__":

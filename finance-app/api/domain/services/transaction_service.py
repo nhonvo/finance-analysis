@@ -4,14 +4,13 @@ import datetime
 from typing import Any, Dict, List, Optional
 import logging
 
-from helper.utils import (
+from adapters.repositories.transaction_repository import TransactionRepository
+from domain.models.transaction import Transaction
+from domain.utlis.clean_data import (
     clean_data,
     get_investment_transactions,
     get_saving_transactions,
 )
-from middleware.global_exception_middleware import global_exception_middleware
-from data.transaction import Transaction
-from repository.transaction_repository import TransactionRepository
 
 logger = logging.getLogger("uvicorn")
 
@@ -38,7 +37,6 @@ class TransactionService:
             logger.error(f"Invalid date format: {e}")
             return False
 
-    @global_exception_middleware
     def get_transactions(
         self,
         query: Optional[str],
@@ -66,7 +64,6 @@ class TransactionService:
             logger.error(f"Error fetching transactions: {e}")
             return []
 
-    @global_exception_middleware
     def get_saving(
         self,
         start_date: Optional[date],
@@ -83,7 +80,6 @@ class TransactionService:
             logger.error(f"Error fetching transactions: {e}")
             return []
 
-    @global_exception_middleware
     def get_investment(
         self,
         start_date: Optional[date],
@@ -188,7 +184,6 @@ class TransactionService:
             logger.error(f"Error generating summary: {e}")
             return {}
 
-    @global_exception_middleware
     def balance_trends(
         self,
         offset: int,

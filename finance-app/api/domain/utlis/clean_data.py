@@ -1,6 +1,7 @@
 from typing import List
-from data.transaction import Transaction
 from datetime import date
+
+from domain.models.transaction import Transaction
 
 
 @staticmethod

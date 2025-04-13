@@ -1,9 +1,12 @@
 from datetime import date
 from typing import List, Optional
 
-from helper.csv_reader import read_transactions_from_csv
-from helper.utils import clean_data, filter_transactions_by_date_range
-from interfaces.generic_repository_interface import T, IGenericRepository
+from adapters.repositories_interface.generic_repository_interface import (
+    T,
+    IGenericRepository,
+)
+from domain.utlis.clean_data import clean_data, filter_transactions_by_date_range
+from domain.utlis.csv_reader import read_transactions_from_csv
 
 
 class GenericRepository(IGenericRepository[T]):

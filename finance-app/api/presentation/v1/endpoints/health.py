@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.config import get_settings
+from domain.config import get_settings
 
 settings = get_settings()
 
