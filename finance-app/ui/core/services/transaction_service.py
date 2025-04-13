@@ -67,13 +67,12 @@ def get_balance_trends(year):
     return APIClient.fetch_data("balance-trends", params)
 
 
-def get_balance_trends_month(year, month, previos_month):
+def get_balance_trends_month(year, start_day, end_day):
     """Fetches balance trends for a given year."""
     params = {
-        "start_date": f"{year}-{previos_month}-19",
-        "end_date": f"{year}-{month}-19",
+        "start_date": f"{start_day}",
+        "end_date": f"{end_day}",
         "limit": -1,
         "offset": 0,
     }
     return APIClient.fetch_data("balance-trends", params)
-

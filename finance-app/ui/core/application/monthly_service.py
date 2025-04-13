@@ -347,7 +347,7 @@ class monthly_service:
             xaxis=dict(
                 title="Transaction Date",
                 tickangle=45,
-                titlefont=dict(size=12, color="#4a4a4a"),
+                title_font=dict(size=12, color="#4a4a4a"),
                 linecolor="#BBBBBB",
                 linewidth=1.2,
                 showgrid=True,
@@ -358,7 +358,7 @@ class monthly_service:
             ),
             yaxis=dict(
                 title="Total Expenses (VND)",
-                titlefont=dict(size=12, color="#4a4a4a"),
+                title_font=dict(size=12, color="#4a4a4a"),
                 tickprefix="VND ",
                 tickformat=",.0f",
                 autorange=True,

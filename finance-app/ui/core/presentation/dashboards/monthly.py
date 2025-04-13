@@ -14,7 +14,7 @@ from services.transaction_service import (
     get_balance_trends_month,
 )
 import pandas as pd
-from utils.util_methods import format_value, get_current_day_and_month
+from utils.util_methods import format_value, get_monthly_range
 from datetime import datetime
 from time import strptime
 import plotly.graph_objects as go
@@ -32,19 +32,21 @@ locale.setlocale(locale.LC_ALL, "vi_VN.utf8")
 
 def create_layout(app, month=None, year=None):
     if year is None or month is None:
-        (month, year) = get_current_day_and_month()
-        previos_month = month - 1
-        # month = month + 1
-        if previos_month == 1:
-            month = 12
-        # month = month + 1
-        month = f"{month:02X}"
-        previos_month = f"{previos_month:02X}"
-    # Generate data for each component
+        (start_day, end_day) = get_monthly_range()
+        # (month, year) = get_current_day_and_month()
+        # previos_month = month - 1
+        # # month = month + 1
+        # if previos_month == 1:
+        #     month = 12
+        # # month = month + 1
+        # month = f"{month:02X}"
+        # previos_month = f"{previos_month:02X}"
 
     params = {
-        "start_date": f"{year}-{previos_month}-19",
-        "end_date": f"{year}-{month}-19",
+        "start_date": f"{start_day}",
+        "end_date": f"{end_day}",
+        # "start_date": f"{year}-{previos_month}-19",
+        # "end_date": f"{year}-{month}-19",
     }
 
     monthly_transaction = get_transactions(params, limit=-1)
@@ -61,7 +63,7 @@ def create_layout(app, month=None, year=None):
     summary = get_summary(params)
     latest_transaction = get_transactions(params, limit=4, sort_by="transaction_date")
     balance_data = get_balance_trends_month(
-        year=year, month=month, previos_month=previos_month
+        year=year, start_day=start_day, end_day=end_day
     )
     balance_trends_chart = balance_trends(balance_data) if balance_data else None
 

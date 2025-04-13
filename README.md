@@ -4,6 +4,13 @@
 
 This repository contains code and scripts for analyzing financial data. Whether you're interested in transaction, balance analysis, or account performance, this repository provides tools to gain insights into financial transactions.
 
+- The api swagger doc:
+
+![alt text](assets/imagswagger-docse.png)
+
+- The ui:
+![alt text](assets/ui.png)
+
 ## Table of Contents
 
 - [Finance Analysis](#finance-analysis)
