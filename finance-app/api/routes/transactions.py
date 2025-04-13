@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, Depends, HTTPException
+from fastapi import APIRouter, Query, Depends
 from datetime import date
 from typing import List, Dict, Any, Optional
 from interfaces.transaction_service_interface import ITransactionService
