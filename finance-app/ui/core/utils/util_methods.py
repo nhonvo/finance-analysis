@@ -131,8 +131,7 @@ def categorize_expense(description, category=None):
         keyword.lower(): category for keyword, category in category_map.items()
     }
 
-
-    elif category == "saving":
+    if category == "saving":
         return "saving"
     elif category == "team":
         return "team"
