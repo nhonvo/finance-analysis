@@ -2,10 +2,10 @@ from fastapi import APIRouter, Query, Depends
 from datetime import date
 from typing import List, Dict, Any, Optional
 from interfaces.transaction_service_interface import ITransactionService
-from models.transaction import Transaction
+from data.transaction import Transaction
 from dependencies import get_transaction_service
 
-router = APIRouter(prefix="/transactions", tags=["Transactions"])
+router = APIRouter()
 
 
 @router.get("/", response_model=List[Transaction])

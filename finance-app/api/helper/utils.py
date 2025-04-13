@@ -1,6 +1,7 @@
 from typing import List
-from models.transaction import Transaction
+from data.transaction import Transaction
 from datetime import date
+
 
 @staticmethod
 def hidden_data(
@@ -16,6 +17,7 @@ def hidden_data(
     ]
 
     return filtered_transactions
+
 
 @staticmethod
 def clean_data(transactions: List[Transaction]) -> List[Transaction]:
@@ -83,8 +85,9 @@ def filter_transactions_by_date_range(
     _data: List[Transaction], start_date: date, end_date: date
 ) -> List[Transaction]:
     """Filters transactions within the given start_date and end_date range."""
-    
+
     return [tx for tx in _data if start_date <= tx.transaction_date <= end_date]
+
 
 # @staticmethod
 # def filter_transactions_by_date_range(

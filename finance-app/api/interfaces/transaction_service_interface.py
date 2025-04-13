@@ -2,7 +2,7 @@ from typing import Optional, List
 from abc import ABC, abstractmethod
 from datetime import date
 from typing import Any, Dict
-from models.transaction import Transaction
+from data.transaction import Transaction
 
 
 class ITransactionService(ABC):
@@ -44,7 +44,7 @@ class ITransactionService(ABC):
         end_date: Optional[date],
     ) -> List[Transaction]:
         pass
-    
+
     @abstractmethod
     def generate_overview_section(self) -> Dict[str, Any]:
         pass

@@ -2,7 +2,7 @@ import requests
 
 
 class APIClient:
-    BASE_URL = "http://127.0.0.1:8000/api/transactions"
+    BASE_URL = "http://127.0.0.1:8000/api/v1/transactions"
 
     @staticmethod
     def fetch_data(endpoint, params={}):

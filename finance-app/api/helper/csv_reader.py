@@ -1,12 +1,13 @@
 import pandas as pd
 import logging
 from typing import List
-from models.transaction import Transaction
+from data.transaction import Transaction
 
-logger = logging.getLogger("uvicorn")  
+logger = logging.getLogger("uvicorn")
 
 _CACHED_TRANSACTIONS: List[Transaction] = []
-_FILE_PATH = 'D://1.Project//1.project//tool//tool-finance-analysis-py//data.xlsx'
+_FILE_PATH = "D://1.Project//1.project//tool//tool-finance-analysis-py//data.xlsx"
+
 
 def read_data_excel(path: str):
     df = pd.read_excel(path)
@@ -31,7 +32,9 @@ def read_data_excel(path: str):
     return df
 
 
-def read_transactions_from_csv(file_path: str = _FILE_PATH, reload: bool = False) -> List[Transaction]:
+def read_transactions_from_csv(
+    file_path: str = _FILE_PATH, reload: bool = False
+) -> List[Transaction]:
     """Reads transactions from CSV and caches them. If reload=True, refresh the cache."""
     global _CACHED_TRANSACTIONS
 
@@ -40,17 +43,21 @@ def read_transactions_from_csv(file_path: str = _FILE_PATH, reload: bool = False
         _CACHED_TRANSACTIONS.clear()
 
     if not _CACHED_TRANSACTIONS:
-        logger.info("📂 Loading transactions from CSV for the first time: %s", file_path)
+        logger.info(
+            "📂 Loading transactions from CSV for the first time: %s", file_path
+        )
         df = read_data_excel(file_path)
         # _CACHED_TRANSACTIONS = [Transaction(**row) for _, row in df.iterrows()]
         for _, row in df.iterrows():
             try:
-                transaction = Transaction(**row.to_dict())  
+                transaction = Transaction(**row.to_dict())
                 _CACHED_TRANSACTIONS.append(transaction)
             except Exception as e:
-                logger.error(f"🚨 Error processing row: {row.to_dict()}")  
-                logger.error(f"❌ Validation Error: {e}")  
+                logger.error(f"🚨 Error processing row: {row.to_dict()}")
+                logger.error(f"❌ Validation Error: {e}")
     else:
-        logger.info("⚡ Using cached transactions (%d items)", len(_CACHED_TRANSACTIONS))
+        logger.info(
+            "⚡ Using cached transactions (%d items)", len(_CACHED_TRANSACTIONS)
+        )
 
     return _CACHED_TRANSACTIONS

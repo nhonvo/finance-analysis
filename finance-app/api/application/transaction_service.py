@@ -10,7 +10,7 @@ from helper.utils import (
     get_saving_transactions,
 )
 from middleware.global_exception_middleware import global_exception_middleware
-from models.transaction import Transaction
+from data.transaction import Transaction
 from repository.transaction_repository import TransactionRepository
 
 logger = logging.getLogger("uvicorn")
