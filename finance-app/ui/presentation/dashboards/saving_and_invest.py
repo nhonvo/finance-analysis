@@ -5,24 +5,31 @@ from application.investment_service import investment_service
 from presentation.components.navbar import get_header, get_menu
 from presentation.components.table_components import make_dash_table
 from presentation.layout import get_section
-from services.transaction_service import get_invest_transactions, get_saving_transactions
+from services.transaction_service import (
+    get_invest_transactions,
+    get_saving_transactions,
+)
 from utils.util_methods import get_current_day_and_month
 import pandas as pd
+
 
 def create_layout(app):
     (month, year) = get_current_day_and_month()
     params = {"start_date": "2023-01-01", "end_date": f"{year}-12-31"}
     # Fetch data from APIs
     saving_transactions = get_saving_transactions(params)
+    saving_transactions_df = pd.DataFrame(saving_transactions)
 
-    savingDashBoard = saving_service(pd.DataFrame(saving_transactions))
+    savingDashBoard = saving_service(saving_transactions_df)
     summarySaving = savingDashBoard.table_saving_report()
     total_saving = savingDashBoard.total_saving()
     saving_bar_chart = savingDashBoard.saving_bar_chart()
     saving_line_chart = savingDashBoard.saving_line_chart()
 
     invest_transactions = get_invest_transactions(params)
-    investmentDashBoard = investment_service(pd.DataFrame(invest_transactions))
+    invest_transactions_df = pd.DataFrame(invest_transactions)
+
+    investmentDashBoard = investment_service(invest_transactions_df)
     summaryInvestment = investmentDashBoard.table_investment_report()
     total_investment = investmentDashBoard.total_investment()
     investment_bar_chart = investmentDashBoard.investment_bar_chart()
@@ -123,7 +130,7 @@ def create_layout(app):
                             html.Div(
                                 [
                                     html.H5(
-                                        "Monthly Balance Changes",
+                                        "Saving Monthly Balance Changes",
                                         className="subtitle padded",
                                     ),
                                     dcc.Graph(
@@ -132,57 +139,12 @@ def create_layout(app):
                                         config={"displayModeBar": False},
                                     ),
                                 ],
-                                className="twelve columns",
-                            )
-                        ],
-                        className="row",
-                    ),
-                    # Cumulative Balance Line Chart Row
-                    html.Div(
-                        [
+                                className="six columns",
+                            ),
                             html.Div(
                                 [
                                     html.H5(
-                                        "Cumulative Balance Over Time",
-                                        className="subtitle padded",
-                                    ),
-                                    dcc.Graph(
-                                        id="graph-15",
-                                        figure=saving_line_chart,
-                                        config={"displayModeBar": False},
-                                    ),
-                                ],
-                                className="twelve columns",
-                            )
-                        ],
-                        className="row",
-                    ),
-                    html.Div(
-                        [
-                            html.Div(
-                                [
-                                    html.H5(
-                                        "Monthly Balance Changes",
-                                        className="subtitle padded",
-                                    ),
-                                    dcc.Graph(
-                                        id="graph-5",
-                                        figure=investment_bar_chart,
-                                        config={"displayModeBar": False},
-                                    ),
-                                ],
-                                className="twelve columns",
-                            )
-                        ],
-                        className="row",
-                    ),
-                    # Cumulative Balance Line Chart Row
-                    html.Div(
-                        [
-                            html.Div(
-                                [
-                                    html.H5(
-                                        "Cumulative Balance Over Time",
+                                        "Saving Cumulative Balance Over Time",
                                         className="subtitle padded",
                                     ),
                                     dcc.Graph(
@@ -191,8 +153,42 @@ def create_layout(app):
                                         config={"displayModeBar": False},
                                     ),
                                 ],
-                                className="twelve columns",
-                            )
+                                className="six columns",
+                            ),
+                        ],
+                        className="row",
+                    ),
+                    # Cumulative Balance Line Chart Row
+                    html.Div(
+                        [
+                            html.Div(
+                                [
+                                    html.H5(
+                                        "Investment Cumulative Balance Over Time",
+                                        className="subtitle padded",
+                                    ),
+                                    dcc.Graph(
+                                        id="graph-15",
+                                        figure=saving_line_chart,
+                                        config={"displayModeBar": False},
+                                    ),
+                                ],
+                                className="six columns",
+                            ),
+                            html.Div(
+                                [
+                                    html.H5(
+                                        "Investment Monthly Balance Changes",
+                                        className="subtitle padded",
+                                    ),
+                                    dcc.Graph(
+                                        id="graph-5",
+                                        figure=investment_bar_chart,
+                                        config={"displayModeBar": False},
+                                    ),
+                                ],
+                                className="six columns",
+                            ),
                         ],
                         className="row",
                     ),

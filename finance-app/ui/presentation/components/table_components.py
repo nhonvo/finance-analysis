@@ -13,15 +13,19 @@ def make_dash_table_dict(data: dict):
 
     return html.Table([html.Tbody(table_rows)], className="dash-table")
 
-
 def make_dash_table(df):
-    """Return a dash definition of an HTML table for a Pandas dataframe"""
+    """Return a Dash HTML table definition from a Pandas DataFrame, including headers."""
     table = []
-    for index, row in df.iterrows():
-        html_row = []
-        for i in range(len(row)):
-            html_row.append(html.Td([row.iloc[i]]))
+
+    # Add header row
+    header = [html.Th(col) for col in df.columns]
+    table.append(html.Tr(header))
+
+    # Add data rows
+    for _, row in df.iterrows():
+        html_row = [html.Td(row[col]) for col in df.columns]
         table.append(html.Tr(html_row))
+
     return table
 
 

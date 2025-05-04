@@ -26,14 +26,18 @@ class housefee_service:
         """Format amount to VND currency."""
         return locale.currency(amount, grouping=True)
 
-    def create_line_chart(self, x_data, y_data, title, y_axis_title, line_color):
-        """Create a line chart using Plotly go.Figure."""
+    def create_stacked_area_chart(
+        self, x_data, y_data, title, y_axis_title, fill_color
+    ):
+        """Create a stacked area chart using Plotly go.Figure."""
         return go.Figure(
             data=go.Scatter(
                 x=x_data,
                 y=y_data,
-                mode="lines+markers",
-                line=dict(color=line_color),
+                mode="lines",
+                line=dict(color=fill_color),
+                fill="tonexty",
+                stackgroup="one",  # This enables stacking
                 name=title,
             ),
             layout=go.Layout(
@@ -42,6 +46,30 @@ class housefee_service:
                 xaxis=dict(title="Date"),
             ),
         )
+
+    def create_stacked_column_chart(self, x_data, y_data_list, labels, title, y_axis_title, colors):
+        """Create a stacked column chart using Plotly go.Figure."""
+        traces = []
+        for y_data, label, color in zip(y_data_list, labels, colors):
+            traces.append(
+                go.Bar(
+                    x=x_data,
+                    y=y_data,
+                    name=label,
+                    marker=dict(color=color)
+                )
+            )
+
+        return go.Figure(
+            data=traces,
+            layout=go.Layout(
+                title=title,
+                barmode="stack",  # Enables stacking
+                yaxis=dict(title=y_axis_title, tickprefix="VND ", tickformat=",.0f"),
+                xaxis=dict(title="Date"),
+            ),
+        )
+
 
     def house_fee(self):
         """Main method to generate the house fee report, combining all steps."""
@@ -70,6 +98,13 @@ class housefee_service:
         ).fillna(0)
         monthly_report.index = monthly_report.index.to_timestamp()
 
+        # Calculate raw sum before formatting
+        monthly_report["Sum"] = (
+            monthly_report["Rent Payment"]
+            + monthly_report["Management Fee"]
+            + monthly_report["Utility Payment"]
+        )
+
         # Add formatted currency columns
         monthly_report["Formatted Rent Payment"] = monthly_report["Rent Payment"].apply(
             self.format_currency
@@ -81,27 +116,43 @@ class housefee_service:
             "Utility Payment"
         ].apply(self.format_currency)
 
+        monthly_report["Formatted Sum"] = monthly_report["Sum"].apply(
+            self.format_currency
+        )
+
         # Create charts
-        fig_rent = self.create_line_chart(
+        fig_rent = self.create_stacked_area_chart(
             monthly_report.index,
             monthly_report["Rent Payment"],
             "Monthly Rent Payments",
             "Rent Payment (VND)",
-            "blue",
+            "#2ca02c",
         )
-        fig_management = self.create_line_chart(
+        fig_management = self.create_stacked_area_chart(
             monthly_report.index,
             monthly_report["Management Fee"],
             "Monthly Management Fees",
             "Management Fee (VND)",
-            "green",
+            "#ff7f0e",
         )
-        fig_utility = self.create_line_chart(
+        fig_utility = self.create_stacked_area_chart(
             monthly_report.index,
             monthly_report["Utility Payment"],
             "Monthly Utility Payments",
             "Utility Payment (VND)",
-            "purple",
+            "#1f77b4",
+        )
+        fig_sum = self.create_stacked_column_chart(
+            x_data = monthly_report.index,
+            y_data_list=[
+                monthly_report["Rent Payment"],
+                monthly_report["Management Fee"],
+                monthly_report["Utility Payment"],
+            ],
+            labels=["Rent", "Management", "Utilities"],
+            title="Monthly Expense Breakdown",
+            y_axis_title="Amount (VND)",
+            colors=["#1f77b4", "#2ca02c", "#ff7f0e"],
         )
 
         # Table for formatted data
@@ -116,7 +167,8 @@ class housefee_service:
                 "Rent Payment": monthly_report["Formatted Rent Payment"],
                 "Management Fee": monthly_report["Formatted Management Fee"],
                 "Utility Payment": monthly_report["Formatted Utility Payment"],
+                "Sum": monthly_report["Formatted Sum"],
             }
-        )
+        ).tail(10)
 
-        return (fig_rent, fig_management, (report_table), fig_utility)
+        return (fig_rent, fig_management, (report_table), fig_utility, fig_sum)

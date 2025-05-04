@@ -16,7 +16,7 @@ def create_layout(app):
     # Fetch data from APIs
     transactions = get_transactions(params, limit=-1)
     house_fee = housefee_service(pd.DataFrame(transactions))
-    fig_rent, fig_management, report_table, fig_utility = house_fee.house_fee()
+    fig_rent, fig_management, report_table, fig_utility, fig_sum = house_fee.house_fee()
 
     return html.Div(
         [
@@ -30,7 +30,6 @@ def create_layout(app):
                         "including monthly rent, management fees, and utility payments. The insights below "
                         "offer a breakdown of each category to help track and manage monthly costs.",
                     ),
-                    # Row 4: Highest Expense Chart
                     html.Div(
                         [
                             html.Div(
@@ -46,41 +45,40 @@ def create_layout(app):
                         ],
                         className="row",
                     ),
-                    # Row 5: Expense Category Tree Map and Column Shorter
                     html.Div(
                         [
+                            # html.Div(
+                            #     [
+                            #         html.H6(
+                            #             "Rent Payment Trends",
+                            #             className="subtitle padded",
+                            #         ),
+                            #         dcc.Graph(
+                            #             id="rent_graph",
+                            #             figure=fig_rent,
+                            #             config={"displayModeBar": False},
+                            #         ),
+                            #     ],
+                            #     className="six columns",
+                            # ),
                             html.Div(
                                 [
                                     html.H6(
-                                        "Rent Payment Trends",
+                                        "Sum",
                                         className="subtitle padded",
                                     ),
                                     dcc.Graph(
                                         id="rent_graph",
-                                        figure=fig_rent,
+                                        figure=fig_sum,
                                         config={"displayModeBar": False},
                                     ),
                                 ],
                                 className="twelve columns",
                             ),
                         ],
-                        className="twelve columns",
+                        className="row",
                     ),
-                    # Row 2: Category Food Analysis
-                    html.Div(
-                        [
-                            html.H6(
-                                "Management Fee Trends", className="subtitle padded"
-                            ),
-                            dcc.Graph(
-                                id="management_graph",
-                                figure=fig_management,
-                                config={"displayModeBar": False},
-                            ),
-                        ],
-                        className="twelve columns",
-                    ),
-                    # Row 3: Team Entertainment and Shopping Analysis
+                    # Utility and Management fee
                     html.Div(
                         [
                             html.Div(
@@ -95,7 +93,21 @@ def create_layout(app):
                                         config={"displayModeBar": False},
                                     ),
                                 ],
-                                className="twelve columns",
+                                className="six columns",
+                            ),
+                            html.Div(
+                                [
+                                    html.H6(
+                                        "Management Fee Trends",
+                                        className="subtitle padded",
+                                    ),
+                                    dcc.Graph(
+                                        id="management_graph",
+                                        figure=fig_management,
+                                        config={"displayModeBar": False},
+                                    ),
+                                ],
+                                className="six columns",
                             ),
                         ],
                         className="row",

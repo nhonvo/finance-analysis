@@ -1,3 +1,4 @@
+from datetime import date
 from services.api_client import APIClient
 
 
@@ -43,6 +44,8 @@ def get_saving_transactions(
 ):
     transaction_params = {
         **params,
+        "start_date": "2023-01-01",
+        "end_date": date.today().isoformat(),
     }
     return APIClient.fetch_data("saving", transaction_params)
 
@@ -52,6 +55,8 @@ def get_invest_transactions(
 ):
     transaction_params = {
         **params,
+        "start_date": "2023-01-01",
+        "end_date": date.today().isoformat(),
     }
     return APIClient.fetch_data("investment", transaction_params)
 

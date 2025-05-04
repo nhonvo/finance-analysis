@@ -53,7 +53,7 @@ class saving_service:
             }
         )
 
-        return pd.DataFrame(result_table)
+        return result_table.tail(10)
 
     def saving_bar_chart(self):
         monthly_balance = self.calculate_saving_balance()

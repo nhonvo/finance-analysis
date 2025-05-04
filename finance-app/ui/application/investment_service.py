@@ -50,7 +50,7 @@ class investment_service:
             }
         )
 
-        return pd.DataFrame(result_table)
+        return result_table.tail(10)
 
     def investment_bar_chart(self):
         monthly_balance = self.calculate_Investment_balance()
