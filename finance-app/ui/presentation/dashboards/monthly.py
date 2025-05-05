@@ -1,3 +1,4 @@
+import calendar
 from application.monthly_service import monthly_service
 from presentation.components.navbar import get_header, get_menu
 
@@ -30,23 +31,22 @@ import locale
 locale.setlocale(locale.LC_ALL, "vi_VN.utf8")
 
 
-def create_layout(app, month=None, year=None):
-    if year is None or month is None:
-        (start_day, end_day) = get_monthly_range()
-        # (month, year) = get_current_day_and_month()
-        # previos_month = month - 1
-        # # month = month + 1
-        # if previos_month == 1:
-        #     month = 12
-        # # month = month + 1
-        # month = f"{month:02X}"
-        # previos_month = f"{previos_month:02X}"
+def create_layout(app, month=None):
+    (start_day, end_day) = get_monthly_range()
+    year = start_day.year
+    current_month = start_day.month
+
+    # For all month report
+    if month is not None:
+        last_day = calendar.monthrange(year, month)[1]
+        start_day = start_day.replace(month=month, day=1)
+        end_day = end_day.replace(month=month, day=last_day)
+        if current_month + 1 < month:
+            return
 
     params = {
         "start_date": f"{start_day}",
         "end_date": f"{end_day}",
-        # "start_date": f"{year}-{previos_month}-19",
-        # "end_date": f"{year}-{month}-19",
     }
 
     monthly_transaction = get_transactions(params, limit=-1)
@@ -98,8 +98,8 @@ def create_layout(app, month=None, year=None):
                 [
                     # Header
                     get_section(
-                        "Monthly",
-                        f"The personal finance report start day 19th each month ({month})",
+                        f"Monthly - {month}",
+                        "The personal finance report start day 19th each month",
                     ),
                     overview_section(overview),
                     # Historical Transaction

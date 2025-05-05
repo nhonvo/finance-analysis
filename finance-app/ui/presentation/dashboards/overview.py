@@ -26,8 +26,8 @@ def create_layout(app, year=None):
         (month, year) = get_current_day_and_month()
     # Define default API parameters for yearly data
     params = {"start_date": f"{year}-01-01", "end_date": f"{year}-12-31"}
-    # Fetch data from APIs
 
+    # Fetch data from APIs
     overview = get_overview(params)
     summary = get_summary(params)
 
@@ -50,7 +50,7 @@ def create_layout(app, year=None):
                 [
                     # Row 1 - Overview
                     get_section(
-                        "Overview",
+                        f"Overview - {year}",
                         "Overall report shows all highlighted transactions, saving money, and all funds.",
                     ),
                     overview_section(overview),
