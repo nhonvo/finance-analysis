@@ -86,7 +86,6 @@ def get_saving(
         end_date=end_date,
     )
 
-
 @router.get("/summary", response_model=Dict[str, Any])
 def get_transaction_summary(
     start_date: Optional[date] = "2023-01-01",
@@ -98,7 +97,6 @@ def get_transaction_summary(
         start_date=start_date,
         end_date=end_date,
     )
-
 
 @router.get("/balance-trends", response_model=List[Dict[str, Any]])
 def get_balance_trends(
@@ -115,3 +113,4 @@ def get_balance_trends(
         limit=limit,
         offset=offset,
     )
+

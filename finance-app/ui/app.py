@@ -47,12 +47,12 @@ def get_page_layout(pathname):
                 notes.create_layout(app),
             ]
         ),
-        "/dash-financial-report/monthly-view": html.Div(
-            [monthly.create_layout(app=app, month=month) for month in range(1, 13)]
-        ),
-        "/dash-financial-report/yearly-view": html.Div(
-            [overview.create_layout(app=app, year=year) for year in range(2023, 2026)]
-        ),
+        # "/dash-financial-report/monthly-view": html.Div(
+        #     [monthly.create_layout(app=app, month=month) for month in range(1, 13)]
+        # ),
+        # "/dash-financial-report/yearly-view": html.Div(
+        #     [overview.create_layout(app=app, year=year) for year in range(2023, 2026)]
+        # ),fi
     }
     return page_layouts.get(pathname, overview.create_layout(app))
 

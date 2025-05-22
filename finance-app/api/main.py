@@ -8,7 +8,7 @@ from infrastructure.middleware.request_response_logging_middleware import (
 from presentation.v1 import api_router
 import logging
 import uvicorn
-
+from fastapi.middleware.cors import CORSMiddleware
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -23,6 +23,15 @@ app.add_middleware(GlobalExceptionMiddleware)
 app.add_middleware(RequestResponseLoggingMiddleware)
 
 app.include_router(api_router.api_router, prefix="/api/v1")
+
+# Allow all CORS origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 
 if __name__ == "__main__":

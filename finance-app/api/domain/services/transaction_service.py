@@ -174,11 +174,11 @@ class TransactionService:
             transaction_count = len(clean_transactions)
 
             return {
-                "Tổng tài sản": total_asset,
-                "Số dư tài khoản": balance,
-                "Tiết kiệm": saving_balance,
-                "Đầu tư": investment_balance,
-                "Số lượng giao dịch": transaction_count,
+                "total": total_asset,
+                "balance": balance,
+                "totalSaving": saving_balance,
+                "invest": investment_balance,
+                "transactions": transaction_count,
             }
         except Exception as e:
             logger.error(f"Error generating summary: {e}")
