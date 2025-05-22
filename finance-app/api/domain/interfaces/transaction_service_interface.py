@@ -64,3 +64,13 @@ class ITransactionService(ABC):
     ) -> List[Dict[str, any]]:
         """Computes the last balance for each day within the date range and returns structured data."""
         pass
+
+    @abstractmethod
+    def expense_tree(
+        self,
+        offset: int,
+        start_date: Optional[date],
+        end_date: Optional[date],
+        limit: int = -1,
+    ) -> List[Dict[str, Any]]:
+        pass

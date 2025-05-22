@@ -86,6 +86,7 @@ def get_saving(
         end_date=end_date,
     )
 
+
 @router.get("/summary", response_model=Dict[str, Any])
 def get_transaction_summary(
     start_date: Optional[date] = "2023-01-01",
@@ -97,6 +98,7 @@ def get_transaction_summary(
         start_date=start_date,
         end_date=end_date,
     )
+
 
 @router.get("/balance-trends", response_model=List[Dict[str, Any]])
 def get_balance_trends(
@@ -114,3 +116,18 @@ def get_balance_trends(
         offset=offset,
     )
 
+@router.get("/expense-tree", response_model=List[Dict[str, Any]])
+def expense_tree(
+    limit: int = Query(10, ge=-1),
+    offset: int = Query(0, ge=0),
+    start_date: Optional[date] = "2023-01-01",
+    end_date: Optional[date] = "2025-12-31",
+    service: ITransactionService = Depends(get_transaction_service),
+):
+    """Retrieve balance trends over time."""
+    return service.expense_tree(
+        start_date=start_date,
+        end_date=end_date,
+        limit=limit,
+        offset=offset,
+    )

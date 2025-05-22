@@ -7,6 +7,7 @@ import logging
 from adapters.repositories.transaction_repository import TransactionRepository
 from domain.models.transaction import Transaction
 from domain.utlis.clean_data import (
+    categorize_expense,
     clean_data,
     get_investment_transactions,
     get_saving_transactions,
@@ -209,4 +210,52 @@ class TransactionService:
             ]
         except Exception as e:
             logger.error(f"Error computing balance trends: {e}")
+            return []
+
+
+    def expense_tree(
+        self,
+        offset: int,
+        start_date: Optional[date],
+        end_date: Optional[date],
+        limit: int = -1,
+    ) -> List[Dict[str, Any]]:
+        try:
+            # Fetch transactions from repository
+            filtered_transactions = self.repository.get(
+                start_date=start_date, end_date=end_date, limit=limit, offset=offset
+            )
+
+            # Slice the list if needed
+            filtered_transactions = (
+                filtered_transactions[offset : offset + limit]
+                if limit != -1
+                else filtered_transactions
+            )
+
+            # Prepare a category sum map
+            category_totals = defaultdict(float)
+
+            for tx in filtered_transactions:
+                debit = tx.debit
+                description = tx.counter_account
+                category = tx.category
+
+                if debit is None or not description:
+                    continue
+
+                expense_category = categorize_expense(description, category)
+                category_totals[expense_category] += debit
+
+            # Format for frontend Treemap
+            result = [
+                {"name": name, "size": amount}
+                for name, amount in category_totals.items()
+                if amount > 0
+            ]
+
+            return result
+
+        except Exception as e:
+            logger.error(f"Error computing expense tree: {e}")
             return []
