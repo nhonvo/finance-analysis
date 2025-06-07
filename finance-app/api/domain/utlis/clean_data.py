@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from datetime import date
 
 from domain.models.transaction import Transaction
@@ -40,46 +40,38 @@ def clean_data(transactions: List[Transaction]) -> List[Transaction]:
 
     return transactions
 
-
 @staticmethod
-def get_saving_transactions(transactions: List[Transaction]) -> List[Transaction]:
-    """Filter transactions related to savings."""
-    saving_keywords = [
-        "TAT TOAN TAI KHOAN TIET KIEM",
-        "Tiết kiệm Điện tử",
-        "DONG TIET KIEM TK",
-        "TAT TOAN SO TIET KIEM",
+def filter_transactions(
+    transactions: List[Transaction],
+    description_keywords: List[str],
+    category_prefix: Optional[str] = None,
+    default_category: Optional[str] = None,
+) -> List[Transaction]:
+    """
+    Filter transactions based on description keywords or category prefix,
+    and calculate the balance for each filtered transaction.
+
+    Args:
+        transactions (List[Transaction]): List of transactions to filter.
+        description_keywords (List[str]): List of description start keywords.
+        category_prefix (Optional[str]): Category prefix filter (e.g., 'saving').
+        default_category (Optional[str]): Default category to assign if missing.
+
+    Returns:
+        List[Transaction]: Filtered transactions with balance and category set.
+    """
+    filtered = [
+        tx for tx in transactions
+        if any(tx.description.startswith(keyword) for keyword in description_keywords)
+        or (category_prefix and tx.category and tx.category.startswith(category_prefix))
     ]
 
-    saving_transactions = [
-        tx
-        for tx in transactions
-        if any(tx.description.startswith(keyword) for keyword in saving_keywords)
-        or tx.category.startswith("saving")
-    ]
+    for tx in filtered:
+        if not tx.category and default_category:
+            tx.category = default_category
+        tx.balance = tx.debit - tx.credit
 
-    for tx in saving_transactions:
-        tx.category = tx.category or "saving"  # Ensure category is not None
-        tx.balance = tx.debit - tx.credit  # Calculate balance
-
-    return saving_transactions
-
-
-@staticmethod
-def get_investment_transactions(transactions: List[Transaction]) -> List[Transaction]:
-    """Filter transactions related to investments."""
-    investment_transactions = [
-        tx
-        for tx in transactions
-        if tx.description.startswith("đầu tư") or tx.category.startswith("invest")
-    ]
-
-    for tx in investment_transactions:
-        tx.category = tx.category or "invest"  # Ensure category is not None
-        tx.balance = tx.debit - tx.credit  # Calculate balance
-
-    return investment_transactions
-
+    return filtered
 
 @staticmethod
 def filter_transactions_by_date_range(

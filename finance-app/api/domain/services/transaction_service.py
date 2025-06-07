@@ -9,8 +9,7 @@ from domain.models.transaction import Transaction
 from domain.utlis.clean_data import (
     categorize_expense,
     clean_data,
-    get_investment_transactions,
-    get_saving_transactions,
+    filter_transactions,
 )
 
 logger = logging.getLogger("uvicorn")
@@ -74,7 +73,17 @@ class TransactionService:
             transactions = self.repository.get(
                 start_date=start_date, end_date=end_date, limit=-1
             )
-            clean_transactions = get_saving_transactions(transactions)
+            clean_transactions = filter_transactions(
+                transactions,
+                description_keywords=[
+                    "TAT TOAN TAI KHOAN TIET KIEM",
+                    "Tiết kiệm Điện tử",
+                    "DONG TIET KIEM TK",
+                    "TAT TOAN SO TIET KIEM",
+                ],
+                category_prefix="saving",
+                default_category="saving",
+            )
 
             return clean_transactions
         except Exception as e:
@@ -91,7 +100,12 @@ class TransactionService:
                 start_date=start_date, end_date=end_date, limit=-1
             )
 
-            clean_transactions = get_investment_transactions(transactions)
+            clean_transactions = filter_transactions(
+                transactions,
+                description_keywords=["đầu tư"],
+                category_prefix="invest",
+                default_category="invest",
+            )
 
             return clean_transactions
         except Exception as e:
@@ -130,8 +144,24 @@ class TransactionService:
         """Generates an overview of income, expense, and savings."""
         try:
             transactions = self.repository.get(start_date=start_date, end_date=end_date)
-            saving_transactions = get_saving_transactions(transactions)
-            investment_transactions = get_investment_transactions(transactions)
+            saving_transactions = filter_transactions(
+                transactions,
+                description_keywords=[
+                    "TAT TOAN TAI KHOAN TIET KIEM",
+                    "Tiết kiệm Điện tử",
+                    "DONG TIET KIEM TK",
+                    "TAT TOAN SO TIET KIEM",
+                ],
+                category_prefix="saving",
+                default_category="saving",
+            )
+
+            investment_transactions = filter_transactions(
+                transactions,
+                description_keywords=["đầu tư"],
+                category_prefix="invest",
+                default_category="invest",
+            )
             saving_balance = sum(tx.balance for tx in saving_transactions)
             investment_balance = sum(tx.balance for tx in investment_transactions)
 
@@ -162,8 +192,24 @@ class TransactionService:
         """Generates a financial summary including total assets and transaction count."""
         try:
             transactions = self.repository.get(start_date=start_date, end_date=end_date)
-            saving_transactions = get_saving_transactions(transactions)
-            investment_transactions = get_investment_transactions(transactions)
+            saving_transactions = filter_transactions(
+                transactions,
+                description_keywords=[
+                    "TAT TOAN TAI KHOAN TIET KIEM",
+                    "Tiết kiệm Điện tử",
+                    "DONG TIET KIEM TK",
+                    "TAT TOAN SO TIET KIEM",
+                ],
+                category_prefix="saving",
+                default_category="saving",
+            )
+
+            investment_transactions = filter_transactions(
+                transactions,
+                description_keywords=["đầu tư"],
+                category_prefix="invest",
+                default_category="invest",
+            )
             saving_balance = sum(tx.balance for tx in saving_transactions)
             investment_balance = sum(tx.balance for tx in investment_transactions)
 
@@ -211,7 +257,6 @@ class TransactionService:
         except Exception as e:
             logger.error(f"Error computing balance trends: {e}")
             return []
-
 
     def expense_tree(
         self,
