@@ -7,7 +7,7 @@ from domain.models.transaction import Transaction
 logger = logging.getLogger("uvicorn")
 
 _CACHED_TRANSACTIONS: List[Transaction] = []
-_FILE_PATH = "D://1.Project//1.project//tool//tool-finance-analysis-py//data.xlsx"
+_FILE_PATH = "D://1.Project//1.project//tool//tool-finance-analysis-py//finance-analysis-for-research//finance-dashboard//src//shared//db//data.xlsx"
 
 
 def read_data_excel(path: str):
